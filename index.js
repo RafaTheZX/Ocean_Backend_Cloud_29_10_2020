@@ -1,22 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongodb = require('mongodb');
-const ObjectId = mongodb.ObjectId;
-
-(async () => {
-
-const connectionString = 'mongodb://localhost:27017';
-
-console.info('Conectando ao banco de dados MongoDB...');
-
-const options = {
-    useUnifiedTopology: true
-};
-
-// const client = await mongodb.MongoClient.connect(connectionString, options);
-
-console.info('MongoDB conectado com sucesso!');
-
 const app = express();
 
 const port = 3000;
@@ -58,68 +41,64 @@ app.get('/', function (req, res) {
   res.send('Hello World');
 });
 
-// const db = client.db('ocean_backend_27_10_2020');
-// const mensagens = db.collection('mensagens');
-/*
-// Read all
-app.get('/mensagem', async function (req, res) {
-    const findResult = await mensagens.find().toArray();
+const mensagens = [
+    {
+        id: 1,
+        texto: 'Essa é uma mensagem'
+    },
+    {
+        id: 2,
+        texto: 'Essa é outra mensagem'
+    }
+];
 
-    res.send(findResult);
+// Read All
+app.get('/mensagem', function (req, res) {
+    res.send(mensagens.filter(Boolean));
 });
 
 // Create
-app.post('/mensagem', async function (req, res) {
+app.post('/mensagem', function (req, res) {
     const texto = req.body.texto;
 
     const mensagem = {
-        texto
+        'id': mensagens.length + 1,
+        'texto': texto
     };
 
-    const resultado = await mensagens.insertOne(mensagem);
+    mensagens.push(mensagem);
 
-    const objetoInserido = resultado.ops[0];
-
-    res.send(objetoInserido);
+    res.send(mensagem);
 });
 
 // Read Single
-app.get('/mensagem/:id', async function (req, res) {
+app.get('/mensagem/:id', function (req, res) {
     const id = req.params.id;
 
-    const mensagem = await mensagens.findOne({ _id: ObjectId(id) });
+    const mensagem = mensagens[id - 1];
 
     res.send(mensagem);
 });
 
 // Update
-app.put('/mensagem/:id', async function (req, res) {
+app.put('/mensagem/:id', function (req, res) {
     const id = req.params.id;
+    const texto = req.body.texto;
 
-    const mensagem = {
-        _id: ObjectId(id),
-        ...req.body
-    };
+    mensagens[id - 1].texto = texto;
 
-    await mensagens.updateOne(
-        { _id: ObjectId(id) },
-        { $set: mensagem }
-    );
-
-    res.send(mensagem);
+    res.send(mensagens[id - 1]);
 });
 
 // Delete
-app.delete('/mensagem/:id', async function (req, res) {
+app.delete('/mensagem/:id', function (req, res) {
     const id = req.params.id;
 
-    await mensagens.deleteOne({ _id: ObjectId(id) });
+    delete mensagens[id - 1];
 
     res.send(`A mensagem de ID ${id} foi removida com sucesso.`);
 });
-*/
+
 app.listen(port, function () {
     console.info('App rodando em http://localhost:' + port);
 });
-
-})();
