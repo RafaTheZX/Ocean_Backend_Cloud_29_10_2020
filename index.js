@@ -58,8 +58,8 @@ app.get('/', function (req, res) {
   res.send('Hello World');
 });
 
-const db = client.db('ocean_backend_27_10_2020');
-const mensagens = db.collection('mensagens');
+// const db = client.db('ocean_backend_27_10_2020');
+// const mensagens = db.collection('mensagens');
 /*
 // Read all
 app.get('/mensagem', async function (req, res) {
